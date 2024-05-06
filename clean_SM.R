@@ -48,7 +48,11 @@ data <- data %>%
   mutate(
     h_self20 = factor(data$ch20m004,
                       levels = c(1:5),
-                      labels = c("poor", "moderate", "good", "very good", "excellent"))
+                      labels = c("poor", 
+                                 "moderate", 
+                                 "good", 
+                                 "very good", 
+                                 "excellent"))
   ) 
 
 data <- data %>% 
@@ -68,7 +72,11 @@ data <- data %>%
   mutate(
     h_improv20 = factor(data$ch20m005,
                         levels = c(1:5),
-                        labels = c("considerably poorer", "somewhat poorer", "the same", "somewhat better","considerably better"))
+                        labels = c("considerably poorer", 
+                                   "somewhat poorer", 
+                                   "the same", 
+                                   "somewhat better",
+                                   "considerably better"))
   ) 
 
 ##  -- apply same labels to daily/social/work hindrance
@@ -80,12 +88,14 @@ data <- data %>%
   )
 
 transform_function <- function(data, ...) { 
-  columns <- enquos(...) 
-  for (col in columns) { 
-    data <- mutate(data, !!col := factor(!!col, 
+    data <- mutate_at(data, vars(...), ~factor(., 
                                          levels = c(1:5), 
-                                         labels = c("not at all", "hardly", "a bit", "quite a lot", "very much")))
-  }
+                                         labels = c("not at all", 
+                                                    "hardly", 
+                                                    "a bit", 
+                                                    "quite a lot", 
+                                                    "very much")))
+ 
 return(data)
 } 
 
@@ -99,7 +109,7 @@ data <- transform_function(data, h_daily20, h_social20, h_work20)
 ##  -- re_belong20 - belong to a certain faith 
 ##  -- check missing vars if available in previous years
 religion <- data %>% 
-  select(nomem_encr, cr20m0134, cr20m135, cr20m143, cr20m144) 
+  select(nomem_encr, cr20m134, cr20m135, cr20m143, cr20m144) 
 health %>% tbl_summary()
 
 ##  -- recode/add value labels to vars
@@ -146,7 +156,10 @@ data <- data %>%
   mutate(
     re_relig20 = factor(cr20m162,
                         levels = c(1:4), 
-                        labels = c("certainly religious", "somewhat religious", "barely religious", "certainly not religious"))
+                        labels = c("certainly religious", 
+                                   "somewhat religious", 
+                                   "barely religious", 
+                                   "certainly not religious"))
     )
 
 healthrace <- data %>%               
