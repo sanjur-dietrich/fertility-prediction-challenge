@@ -38,6 +38,8 @@ codebook_s <- readr::read_csv("PreFer_codebook_summary.csv", show_col_types = FA
 data <- data_orig %>% 
   subset(outcome_available == 1) 
 
+testInheritedMethods()
+
 ## Create Health variables: 
 ##  -- h_self20 - rating of general health for 2020
 ##  -- h_comphi20 - has complementary health insurance 
