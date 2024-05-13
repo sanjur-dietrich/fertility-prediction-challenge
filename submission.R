@@ -37,6 +37,9 @@ clean_df <- function(df, background_df = NULL){
   # Returns:
   # data frame: The cleaned dataframe with only the necessary columns and processed variables.
   
+  df <- df %>%
+          filter(outcome_available ==1)
+  
   #######################################################
   # BACKGROUND VARIABLES
     background <- df %>% 
