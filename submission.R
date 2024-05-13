@@ -50,7 +50,7 @@ clean_df <- function(df, background_df = NULL){
                                            "First generation foreign, non-western background",
                                            "Second generation foreign, Western background",
                                            "Second generation foreign, non-western background")), 
-             age2020 = as.numeric(age_bg),  # respondent's age in Dec, 2020
+             age = as.numeric(age_bg),  # respondent's age in Dec, 2020
              sex = factor(ifelse(gender_bg == 1, "male", "female")), 
              marital_status2020 = factor(burgstat_2020, 
                                          levels = c(1:5), 
