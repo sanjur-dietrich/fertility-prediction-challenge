@@ -39,9 +39,8 @@ clean_df <- function(df, background_df = NULL){
   
   df <- df %>%
           filter(outcome_available ==1)
+
   
-  #######################################################
-  # BACKGROUND VARIABLES
     background <- df %>% 
       select(nomem_encr, birthyear_bg:woonvorm_2020)  %>%      # background variables 
       mutate(migration = factor(migration_background_bg,  # starting from fixed background variables 
@@ -51,7 +50,7 @@ clean_df <- function(df, background_df = NULL){
                                            "First generation foreign, non-western background",
                                            "Second generation foreign, Western background",
                                            "Second generation foreign, non-western background")), 
-             age2020 = age_bg,  # respondent's age in Dec, 2020
+             age2020 = as.numeric(age_bg),  # respondent's age in Dec, 2020
              sex = factor(ifelse(gender_bg == 1, "male", "female")), 
              marital_status2020 = factor(burgstat_2020, 
                                          levels = c(1:5), 
@@ -108,8 +107,9 @@ clean_df <- function(df, background_df = NULL){
                             levels = c(0, 1), 
                             labels = c("no", "yes")), 
              # continuous variables
-             pinc2020 = brutoink_2020,
+             pinc2020 = as.numeric(brutoink_2020),
              hinc2020 = brutohh_f_2020)
+    
     
     # Select only constructed variables
     background <- background %>% 
@@ -119,8 +119,8 @@ clean_df <- function(df, background_df = NULL){
              livep, pinc2020, hinc2020) 
     
     
-  #######################################################
-  # FAMILY & HOUSEHOLD
+    #######################################################
+    # FAMILY & HOUSEHOLD
     fert <- df %>%
       mutate(family_rel =  factor(cf20m526, # how would you describe the relationship with your family 
                                   levels = c(1:5), 
@@ -211,8 +211,8 @@ clean_df <- function(df, background_df = NULL){
     family <- diffop_function(family, diffopinion1, diffopinion2, diffopinion3, diffopinion4)
     
     
-  #######################################################
-  # HEALTH
+    #######################################################
+    # HEALTH
     
     ##  -- h_self20 - rating of general health for 2020
     ##  -- h_comphi20 - has complementary health insurance 
@@ -230,16 +230,16 @@ clean_df <- function(df, background_df = NULL){
         h_allow20 = if_else(ch20m263 == 1, 0, ch20m263), 
         h_allow20 = if_else(ch20m263 > 1, 1, h_allow20), 
         h_comphi20 = if_else(ch20m239 == 2, 0, ch20m239),
-        h_improv20 = ch20m005,
-        h_daily20 = ch20m020, 
-        h_social20 = ch20m021, 
-        h_work20 = ch20m022
+        h_improv20 = as.numeric(ch20m005),
+        h_daily20 = as.numeric(ch20m020), 
+        h_social20 = as.numeric(ch20m021), 
+        h_work20 = as.numeric(ch20m022)
       )  %>%
       select(nomem_encr, h_self20, h_allow20, h_comphi20, h_improv20, h_daily20, h_social20, h_work20) # only  new variables about health are added 
     
     
-  #######################################################
-  # PERSONALITY, RELIGION, ETHNICITY
+    #######################################################
+    # PERSONALITY, RELIGION, ETHNICITY
     
     ##  -- no priority vars for personality
     
@@ -283,11 +283,11 @@ clean_df <- function(df, background_df = NULL){
     
     
     religion <- religion %>% 
-      mutate(re_relig20 = cr20m162)  %>%
+      mutate(re_relig20 = as.numeric(cr20m162))  %>%
       select(nomem_encr, re_raised20, re_belong20, re_relig20) # only  new variables about religion are added 
     
-  #######################################################
-  # ECONOMIC SITUATION (ASSETS, HOUSING, INCOME)
+    #######################################################
+    # ECONOMIC SITUATION (ASSETS, HOUSING, INCOME)
     
     
     # Select variables from a list generated in excel
@@ -308,7 +308,7 @@ clean_df <- function(df, background_df = NULL){
       mutate(resp_finmatters20 = factor(ca20g002, levels = c(0,1)),
              balance20 = ca20g012,
              loans20 = ca20g063, # could make negative since it's loans?
-             minimum_desiredinc20 = ci20m236, # These variables give subjective reference points for respondent's income
+             minimum_desiredinc20 = as.numeric(ci20m236), # These variables give subjective reference points for respondent's income
              exp_vs_inc20 = factor(ci20m253, 
                                    levels = c(1:3), 
                                    labels = c("expenditure was higher than the income", 
@@ -346,16 +346,16 @@ clean_df <- function(df, background_df = NULL){
                                                 "very hard")),
              difficultyinc = factor(ci20m378,
                                     levels = c(1:10)),
-             childbene20 = ci20m140,                      # Annual payments (to and from respondent)
-             healthcarebene20 = ci20m143,
-             alimonychildreceive20 = ci20m165,
-             alimonyspouse20 = ci20m206,
-             alimonychildpay20 = ci20m208,
-             paychildlivealone20 = ci20m210,
-             childbudget20 = ci20m330,
-             housingdebt20 = ci20m301,                   # Debts in 2019
-             utilitiesdebt20 = ci20m303,
-             rentamount20 = cd20m008,                   # Rent
+             childbene20 = as.numeric(ci20m140),                      # Annual payments (to and from respondent)
+             healthcarebene20 = as.numeric(ci20m143),
+             alimonychildreceive20 = as.numeric(ci20m165),
+             alimonyspouse20 = as.numeric(ci20m206),
+             alimonychildpay20 = as.numeric(ci20m208),
+             paychildlivealone20 = as.numeric(ci20m210),
+             childbudget20 = as.numeric(ci20m330),
+             housingdebt20 = as.numeric(ci20m301),                   # Debts in 2019
+             utilitiesdebt20 = as.numeric(ci20m303),
+             rentamount20 = as.numeric(cd20m008),                   # Rent
              hhexpend_nextyear20 = factor(ci20m258,
                                           levels=c(1:5),
                                           labels=c("much higher than the income",
@@ -376,7 +376,7 @@ clean_df <- function(df, background_df = NULL){
              econissue_behindrent20 = factor(ci20m248, levels = c(0,1)),
              econissue_debtcollect20 = factor(ci20m249, levels = c(0,1)),
              econissue_socialsupport20 = factor(ci20m250, levels = c(0,1)),
-             dwellrooms20 = cd20m034,                                          # HOUSING
+             dwellrooms20 = as.numeric(cd20m034),                                          # HOUSING
              dwellissuesmall20 = factor(cd20m041, levels = c(0,1)),
              dwellissueheat20 = factor(cd20m043, levels = c(0,1)),
              dwellissueroof20 = factor(cd20m044, levels = c(0,1)),
@@ -395,7 +395,7 @@ clean_df <- function(df, background_df = NULL){
              stablechgwork20 = factor(ci20m239, levels = c(0,1)), 
              stablebenefitinc20 = factor(ci20m241, levels = c(0,1)), 
              stablebenefitdec20 = factor(ci20m242, levels = c(0,1)),  
-             stablelosejob20 = ci20m379,
+             stablelosejob20 = as.numeric(ci20m379),
              chgsincelasteyr20 = factor(ci20m377, levels = c(0,10)),                                 
       )  %>%
       select(nomem_encr, 
@@ -451,8 +451,8 @@ clean_df <- function(df, background_df = NULL){
     
     
     
-  ########################################################
-  # POLITICS & VALUES
+    ########################################################
+    # POLITICS & VALUES
     
     # Select variables from a list generated in excel
     
@@ -604,8 +604,8 @@ clean_df <- function(df, background_df = NULL){
              genderedparenting20	,
              menshouldleadjobs20) # only  new variables about politics + values are added 
     
-  ########################################################
-  # COMBINE CLEANED VARIABLES
+    ########################################################
+    # COMBINE CLEANED VARIABLES
     
     #put all data frames into list
     df_list <- list(background, health, religion, econsit_priority, polival_priority, fert, family)
@@ -614,7 +614,6 @@ clean_df <- function(df, background_df = NULL){
     df <- df_list %>% reduce(full_join, by='nomem_encr')
     
     return(df)
-    
   }
   
 
