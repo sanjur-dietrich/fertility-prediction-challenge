@@ -113,7 +113,7 @@ clean_df <- function(df, background_df = NULL){
     
     # Select only constructed variables
     background <- background %>% 
-      select(nomem_encr, migration, age2020, sex, 
+      select(nomem_encr, migration, age, sex, 
              marital_status2020, domestic_situation2020, dwell_type2020, 
              urban2020, occupation, education_cbs, 
              livep, pinc2020, hinc2020) 
